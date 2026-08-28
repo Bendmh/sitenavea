@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planning de Garde d'Animaux</title>
+  
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
+      padding: 20px 10px;
+    }
+
+    .calendar-card {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.25rem;
+    }
+
+    /* Adapter les boutons et l'en-tête de FullCalendar */
+    .fc {
+      max-width: 100%;
+    }
+
+    .fc-toolbar {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .fc-toolbar-title {
+      font-size: 1.1rem !important;
+      font-weight: bold;
+    }
+
+    .fc-button-primary {
+      background-color: var(--primary) !important;
+      border-color: var(--primary) !important;
+      border-radius: 8px !important;
+    }
+
+    /* Style spécifique pour les petits écrans (smartphones) */
+    @media (max-width: 600px) {
+      .calendar-card {
+        padding: 12px;
+        border-radius: 12px;
+      }
+      
+      .fc-header-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+
+      .fc-toolbar-chunk {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calendar-card">
+    <h2>🐶 Indisponibilités & Gardes Prévues</h2>
+    <div id="calendar"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+      // Vérifie si l'utilisateur est sur écran mobile (moins de 768px)
+      var isMobile = window.innerWidth < 768;
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'fr',
+        // Sur mobile: vue liste/planning. Sur PC: vue mois classique.
+        initialView: isMobile ? 'listWeek' : 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: isMobile ? 'listWeek,dayGridMonth' : 'dayGridMonth,timeGridWeek,listWeek'
+        },
+        buttonText: {
+          today: "Aujourd'hui",
+          month: 'Mois',
+          week: 'Semaine',
+          list: 'Planning'
+        },
+        height: 'auto',
+        // Liste de vos créneaux réservés
+        events: [
+          {
+            title: 'Occupé (Rex 🐕)',
+            start: '2026-09-01',
+            end: '2026-09-05',
+            color: '#ef4444' // Rouge pour les plages réservées
+          },
+          {
+            title: 'Occupé (Max 🐩)',
+            start: '2026-09-10',
+            end: '2026-09-14',
+            color: '#ef4444'
+          },
+          {
+            title: 'Complet 🐕‍🦺',
+            start: '2026-09-20',
+            end: '2026-09-24',
+            color: '#ef4444'
+          }
+        ]
+      });
+
+      calendar.render();
+
+      // Repositionne dynamiquement la vue si l'écran redimensionne ou pivote
+      window.addEventListener('resize', function() {
+        if (window.innerWidth < 768 && calendar.view.type === 'dayGridMonth') {
+          calendar.changeView('listWeek');
+        } else if (window.innerWidth >= 768 && calendar.view.type === 'listWeek') {
+          calendar.changeView('dayGridMonth');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
